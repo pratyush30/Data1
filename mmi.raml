@@ -1,0 +1,469 @@
+#%RAML 0.8
+
+##########
+# Copyright (C) 2010, 2016, Oracle and/or its affiliates. All rights reserved.
+##########
+
+
+title: Diameter Signaling Router MMI
+version: v3.0
+protocols: [ HTTPS ]
+mediaType: application/json
+
+baseUri: https://{target}/mmi/dsr/{version}/
+baseUriParameters:
+  target:
+    description: the FQDN of the target system (e.g., testlab.oracle.com)
+
+# The security scheme uses token based authentication.
+# A custom header (X-Auth-Token) specifies the token.
+# none - means no authentication is required.
+
+securitySchemes:
+  - x-other: !include includes/security.raml
+  - none:    !include includes/nosecurity.raml
+
+documentation:
+  - { title: Copyright,                                         content: !include documents/copyright.md       }
+  - { title: Introduction & Overview,                           content: !include documents/intro.md           }
+  - { title: General Behaviors,                                 content: !include documents/genbehaviors.md    }
+  - { title: MMI Security,                                      content: !include documents/gensecurity.md     }
+  - { title: Examples,                                          content: !include documents/example.md         }
+  - { title: The Client Authentication Area,                    content: !include documents/auth.md            }
+  - { title: The Topology Configuration and Management Area,    content: !include documents/topo.md            }
+  - { title: The Bulk Configuration Area,                       content: !include documents/configurator.md    }
+  - { title: The System Administration Area,                    content: !include documents/admin.md           }
+  - { title: The System Monitoring Area,                        content: !include documents/monitor.md         }
+  - { title: The Core Diameter Area,                            content: !include documents/diameter.md        }
+  - { title: The All Area,                                      content: !include documents/all.md             }
+  - { title: The Fabr Area,                                     content: !include documents/fabr.md            }
+  - { title: The ComAgent Area,                                 content: !include documents/comagent.md        }
+  - { title: The Scef Area,                                     content: !include documents/scef.md            }
+  - { title: The Eir Area,                                      content: !include documents/eir.md             }
+  - { title: Change Log,                                        content: !include documents/dsrApiChangeLog.md }
+  - { title: Bulk Export XSD Schema,                            content: !include documents/export.md          }
+#
+# Traits are things that can be selected and "mixed-in" to specific
+# operations / requests.  They define query parameters that can
+# be used with the resources.
+#
+traits:
+- scopednonarrayed: !include 'traits/scopednonarrayed.raml'
+- filtered: !include 'traits/filtered.raml'
+- dpiApplicationStatusFiltered: !include 'traits/dpiApplicationStatusFiltered.raml'
+- paged: !include 'traits/paged.raml'
+- dpiTtgStatusFiltered: !include 'traits/dpiTtgStatusFiltered.raml'
+- vstpLinkStatusFiltered: !include 'traits/vstpLinkStatusFiltered.raml'
+- dpiPnStatusFiltered: !include 'traits/dpiPnStatusFiltered.raml'
+- vstpFeatureAdminStatesFiltered: !include 'traits/vstpFeatureAdminStatesFiltered.raml'
+- vstpSccpApplicationStatusFiltered: !include 'traits/vstpSccpApplicationStatusFiltered.raml'
+- dpirlStatusFiltered: !include 'traits/dpirlStatusFiltered.raml'
+- optioned: !include 'traits/optioned.raml'
+- comAgentConnectionStatusFiltered: !include 'traits/comAgentConnectionStatusFiltered.raml'
+- scopedSvrSgNe: !include 'traits/scopedSvrSgNe.raml'
+- vstpGlobalTitleAddressFiltered: !include 'traits/vstpGlobalTitleAddressFiltered.raml'
+- vstpConnectionStatusFiltered: !include 'traits/vstpConnectionStatusFiltered.raml'
+- dpiEtgStatusFiltered: !include 'traits/dpiEtgStatusFiltered.raml'
+- dpiRgStatusFiltered: !include 'traits/dpiRgStatusFiltered.raml'
+- dpiConnectionStatusFiltered: !include 'traits/dpiConnectionStatusFiltered.raml'
+- vstpRemoteSignalingPointStatusFiltered: !include 'traits/vstpRemoteSignalingPointStatusFiltered.raml'
+- sorted: !include 'traits/sorted.raml'
+- timeinterval: !include 'traits/timeinterval.raml'
+- dpiBulkConnectionEnableNameFiltered: !include 'traits/dpiBulkConnectionEnableNameFiltered.raml'
+- scoped: !include 'traits/scoped.raml'
+- vstpLinksetStatusFiltered: !include 'traits/vstpLinksetStatusFiltered.raml'
+- timeranged: !include 'traits/timeranged.raml'
+- vstpMtpScreenSetNameFiltered: !include 'traits/vstpMtpScreenSetNameFiltered.raml'
+- vstpGttSelectorFiltered: !include 'traits/vstpGttSelectorFiltered.raml'
+- vstpConfigurationLevelFiltered: !include 'traits/vstpConfigurationLevelFiltered.raml'
+- dpiConfigurationLevelFiltered: !include 'traits/dpiConfigurationLevelFiltered.raml'
+- dpiTtpStatusFiltered: !include 'traits/dpiTtpStatusFiltered.raml'
+
+#
+# ResourceTypes are templates for classifying resources.
+# They provide a standard implementation.
+#
+resourceTypes:
+- baseCollection: !include 'resourceTypes/baseCollection.raml'
+- collection: !include 'resourceTypes/collection.raml'
+- timeOrderedCollection: !include 'resourceTypes/timeOrderedCollection.raml'
+- baseMember: !include 'resourceTypes/baseMember.raml'
+- member: !include 'resourceTypes/member.raml'
+- baseCollectionNoGetAll: !include 'resourceTypes/baseCollectionNoGetAll.raml'
+- base: !include 'resourceTypes/base.raml'
+
+#
+# These are the json and xml schemas used in this specification
+#
+schemas:
+- !include 'schemas/eir.raml'
+- !include 'schemas/sbr.raml'
+- !include 'schemas/topo.raml'
+- !include 'schemas/vstp.raml'
+- !include 'schemas/sdbs.raml'
+- !include 'schemas/diameter.raml'
+- !include 'schemas/mon.raml'
+- !include 'schemas/bulk.raml'
+- !include 'schemas/admin.raml'
+- !include 'schemas/appworks.raml'
+- !include 'schemas/fabr.raml'
+- !include 'schemas/auth.raml'
+- !include 'schemas/all.raml'
+- !include 'schemas/comagent.raml'
+- !include 'schemas/rbar.raml'
+- !include 'schemas/scef.raml'
+
+#
+# These are the resources defined by this specification
+#
+/admin/dnsconfigurations:     !include resources/admin/dnsconfigurations.raml
+/admin/securitycertificates:  !include resources/admin/securitycertificates.raml
+/admin/sftpusers:             !include resources/admin/sftpusers.raml
+/admin/snmptrapping:          !include resources/admin/snmptrapping.raml
+/admin/softwareversions:      !include resources/admin/softwareversions.raml
+
+
+###################
+# Copyright (C) 2010, 2016, Oracle and/or its affiliates. All rights reserved.
+###################
+
+# AppWorks consolidation script needs one YAML file per area defining the
+# resources within that area. This YAML file is for area named 'all' and
+# defines all the resources within that area. Each line in this file represents
+# a resource and is of format
+#
+#   all/<resource>: !include <resourceRamlFile>
+#
+# the prefix in each line shall match the area and the resource name used in
+# the URI.
+#
+# The area 'all' includes common resources that span all the other areas.
+
+/all/configurationlevels: !include resources/all/configurationlevels.raml
+
+/auth/tokens:             !include resources/auth/tokens.raml
+
+/bulk/configurator:       !include resources/bulk/configurator.raml
+
+
+####################
+# Copyright (C) 2010, 2018, Oracle and/or its affiliates. All rights reserved.
+####################
+
+# AppWorks consolidation script needs one YAML file per area defining the
+# resources within that area. This YAML file is for comagent/ area and defines
+# all the resources within that area. Each line in this file represents a
+# resource and is of format
+#
+#   comagent/<resource>: !include <resourceRamlFile>
+#
+# the prefix in each line shall match the area and the resource name used in
+# the URI.
+
+/comagent/connectiongroups:                !include resources/comagent/connectiongroups.raml
+/comagent/connections:                     !include resources/comagent/connectionstatus.raml
+/comagent/haservices:                      !include resources/comagent/haservices.raml
+/comagent/remoteservers:                   !include resources/comagent/remoteservers.raml
+/comagent/routedservices:                  !include resources/comagent/routedservices.raml
+
+
+####################
+## Copyright (C) 2010, 2018, Oracle and/or its affiliates. All rights reserved.
+#####################
+#
+## AppWorks consolidation script needs one YAML file per area defining the
+## resources within that area. This YAML file is for diameter area and defines
+## all the resources within that area. Each line in this file represents a
+## resource and is of format
+##
+##   diameter/<resource>: !include <resourceRamlFile>
+##
+## the prefix in each line shall match the area and the resource name used in
+## the URI.
+
+/diameter/applicationids:                              !include resources/diameter/applicationids.raml
+/diameter/applicationpriorityoptions:                  !include resources/diameter/applicationpriorityoptions.raml
+/diameter/applicationrouterules:                       !include resources/diameter/applicationrouterules.raml
+/diameter/applicationroutetables:                      !include resources/diameter/applicationroutetables.raml
+/diameter/applications:                                !include resources/diameter/applications.raml
+/diameter/avpremovallists:                             !include resources/diameter/avpremovallists.raml
+/diameter/aftopologyhidingcfgsets:                     !include resources/diameter/aftopologyhidingcfgsets.raml
+/diameter/capacityconfigurationsets:                   !include resources/diameter/capacityconfigurationsets.raml
+/diameter/capacitysummary:                             !include resources/diameter/capacitysummary.raml
+/diameter/cexconfigurationsets:                        !include resources/diameter/cexconfigurationsets.raml
+/diameter/cexparameters:                               !include resources/diameter/cexparameters.raml
+/diameter/commandcodes:                                !include resources/diameter/commandcodes.raml
+/diameter/commonapplicationoptions:                    !include resources/diameter/commonappoptions.raml
+/diameter/connectionalarmgroups:                       !include resources/diameter/connectionalarmgroups.raml
+/diameter/connectioncapacitydashboard:                 !include resources/diameter/connectioncapacitydashboard.raml
+/diameter/connectionconfigurationsets:                 !include resources/diameter/connectionconfigurationsets.raml
+/diameter/connections:                                 !include resources/diameter/connections.raml
+/diameter/dampserverhostnames:                         !include resources/diameter/dampserverhostnames.raml
+/diameter/dnsoptions:                                  !include resources/diameter/dnsoptions.raml
+/diameter/dpdattributesets:                            !include resources/diameter/dpdattributesets.raml
+/diameter/dpdrealms:                                   !include resources/diameter/dpdrealms.raml
+/diameter/dpddnssets:                                  !include resources/diameter/dpddnssets.raml
+/diameter/egressmessagethrottlingconfigurationsets:    !include resources/diameter/egressmessagethrottlingconfigurationsets.raml
+/diameter/egressthrottlegroups:                        !include resources/diameter/egressthrottlegroups.raml
+/diameter/egressthrottlelists:                         !include resources/diameter/egressthrottlelists.raml
+/diameter/hsstopologyhidingcfgsets:                    !include resources/diameter/hsstopologyhidingcfgsets.raml
+/diameter/localnodes:                                  !include resources/diameter/localnodes.raml
+/diameter/mccmncmappings:                              !include resources/diameter/mccmncmappings.raml
+/diameter/mccmncs:                                     !include resources/diameter/mccmncs.raml
+/diameter/messagecopyconfigurationsets:                !include resources/diameter/messagecopyconfigurationsets.raml
+/diameter/messagepriorityconfigurationsets:            !include resources/diameter/messagepriorityconfigurationsets.raml
+/diameter/mpprofile:                                  !include resources/diameter/mpprofile.raml
+/diameter/mmetopologyhidingcfgsets:                    !include resources/diameter/mmetopologyhidingcfgsets.raml
+/diameter/mpprofileassignments:                        !include resources/diameter/mpprofileassignments.raml
+/diameter/options:                                     !include resources/diameter/options.raml
+/diameter/pathtopologyhidingcfgsets:                   !include resources/diameter/pathtopologyhidingcfgsets.raml
+/diameter/pcrftopologyhidingcfgsets:                   !include resources/diameter/pcrftopologyhidingcfgsets.raml
+/diameter/peerdampconnectivity:                        !include resources/diameter/peerdampconnectivity.raml
+/diameter/peerdamps:                                   !include resources/diameter/peerdamps.raml
+/diameter/peernodealarmgroups:                         !include resources/diameter/peernodealarmgroups.raml
+/diameter/peernodegroups:                              !include resources/diameter/peernodegroups.raml
+/diameter/peernodes:                                   !include resources/diameter/peernodes.raml
+/diameter/peerrouterules:                              !include resources/diameter/peerrouterules.raml
+/diameter/peerroutetables:                             !include resources/diameter/peerroutetables.raml
+/diameter/pendinganswertimers:                         !include resources/diameter/pendinganswertimers.raml
+/diameter/pendingtransactionlimitingconfigurationsets: !include resources/diameter/pendingtransactionlimitingconfigurationsets.raml
+/diameter/protectednetworks:                           !include resources/diameter/protectednetworks.raml
+/diameter/ratelimitingconfigurationsets:               !include resources/diameter/ratelimitingconfigurationsets.raml
+/diameter/reroutesonanswer:                            !include resources/diameter/reroutesonanswer.raml
+/diameter/reservedmccranges:                           !include resources/diameter/reservedmccranges.raml
+/diameter/routegroups:                                 !include resources/diameter/routegroups.raml
+/diameter/routelists:                                  !include resources/diameter/routelists.raml
+/diameter/routingoptionsets:                           !include resources/diameter/routingoptionsets.raml
+/diameter/sharedtrafficthrottlegroups:                 !include resources/diameter/sharedtrafficthrottlegroups.raml
+/diameter/signalingfirewalls:                          !include resources/diameter/signalingfirewalls.raml
+/diameter/signalingipaddresses:                        !include resources/diameter/signalingipaddresses.raml
+/diameter/trafficthrottlegroups:                       !include resources/diameter/trafficthrottlegroups.raml
+/diameter/trafficthrottlepointconfigurationsets:       !include resources/diameter/trafficthrottlepointconfigurationsets.raml
+/diameter/trafficthrottlepoints:                       !include resources/diameter/trafficthrottlepoints.raml
+/diameter/transactionconfigurationsets:                !include resources/diameter/transactionconfigurationsets.raml
+/diameter/trustednetworklists:                         !include resources/diameter/trustednetworklists.raml
+
+# AppWorks consolidation script needs one YAML file per area defining the
+# resources within that area. This YAML file is for eir area and defines
+# all the resources within that area. Each line in this file represents a
+# resource and is of format
+#
+#   eir/<resource>: !include <resourceRamlFile>
+#
+# the prefix in each line shall match the area and the resource name used in
+# the URI.
+
+/eir/imsiaddresses:                          !include resources/eir/imsiranges.raml
+/eir/options:                                !include resources/eir/options.raml
+
+
+
+####################
+# Copyright (C) 2010, 2018, Oracle and/or its affiliates. All rights reserved.
+####################
+
+# AppWorks consolidation script needs one YAML file per area defining the
+# resources within that area. This YAML file is for fabr area and defines
+# all the resources within that area. Each line in this file represents a
+# resource and is of format
+#
+#   fabr/<resource>: !include <resourceRamlFile>
+#
+# the prefix in each line shall match the area and the resource name used in
+# the URI.
+
+/fabr/addressresolutions:              !include resources/fabr/addressresolutions.raml
+/fabr/defaultdestinations:             !include resources/fabr/defaultdestinations.raml
+/fabr/options:                         !include resources/fabr/options.raml
+/fabr/routingexceptions:               !include resources/fabr/routingexceptions.raml
+/fabr/supportedapplications:           !include resources/fabr/supportedapplications.raml
+
+
+
+####################
+## Copyright (C) 2010, 2017, Oracle and/or its affiliates. All rights reserved.
+#####################
+#
+## AppWorks consolidation script needs one YAML file per area defining the
+## resources within that area. This YAML file is for diameter area and defines
+## all the resources within that area. Each line in this file represents a
+## resource and is of format
+##
+##   diameter/<resource>: !include <resourceRamlFile>
+##
+## the prefix in each line shall match the area and the resource name used in
+## the URI.
+#
+/diameter/ipfeoptions:                                 !include resources/diameter/ipfeoptions.raml
+/diameter/ipfetargetsets:                              !include resources/diameter/ipfetargetsets.raml
+
+
+/mon/alarms:             !include resources/mon/alarms.raml
+
+/mon/kpis/data:          !include resources/mon/kpidata.raml
+/mon/kpis/defs:          !include resources/mon/kpidef.raml
+/mon/kpis/groups:        !include resources/mon/kpigrp.raml
+/mon/kpis/scopes:        !include resources/mon/kpiscope.raml
+/mon/kpis/stats:         !include resources/mon/kpistat.raml
+
+/mon/measurements/budget:  !include resources/mon/measbudget.raml
+/mon/measurements/data:    !include resources/mon/measdata.raml
+/mon/measurements/defs:    !include resources/mon/measdef.raml
+/mon/measurements/groups:  !include resources/mon/measgrp.raml
+/mon/measurements/summary: !include resources/mon/meassummary.raml
+
+/mon/tasks:              !include resources/mon/tasks.raml
+
+
+####################
+# Copyright (C) 2010, 2017, Oracle and/or its affiliates. All rights reserved.
+####################
+
+# AppWorks consolidation script needs one YAML file per area defining the
+# resources within that area. This YAML file is for rbar area and defines
+# all the resources within that area. Each line in this file represents a
+# resource and is of format
+#
+#   rbar/<resource>: !include <resourceRamlFile>
+#
+# the prefix in each line shall match the area and the resource name used in
+# the URI.
+
+/rbar/addressranges:                   !include resources/rbar/addressrange.raml
+/rbar/addressresolutions:              !include resources/rbar/addressresolution.raml
+/rbar/addresstables:                   !include resources/rbar/addresstable.raml
+/rbar/destinations:                    !include resources/rbar/destination.raml
+/rbar/domainaddresses:                 !include resources/rbar/domainaddress.raml
+/rbar/individualaddresses:             !include resources/rbar/individualaddress.raml
+/rbar/options:                         !include resources/rbar/option.raml
+/rbar/routingexceptions:               !include resources/rbar/routingexception.raml
+/rbar/supportedapplications:           !include resources/rbar/supportedapplication.raml
+
+
+
+####################
+# Copyright (C) 2010, 2018, Oracle and/or its affiliates. All rights reserved.
+####################
+
+#
+## AppWorks consolidation script needs one YAML file per area defining the
+## resources within that area. This YAML file is for sbr area and defines
+## all the resources within that area. Each line in this file represents a
+## resource and is of format
+##
+##   sbr/<resource>: !include <resourceRamlFile>
+##
+## the prefix in each line shall match the area and the resource name used in
+## the URI.
+
+/sbr/databaseoptions:                  !include resources/sbr/databaseoptions.raml
+/sbr/databaseresizingplans:            !include resources/sbr/databaseresizingplans.raml
+/sbr/datamigrationplans:              !include resources/sbr/datamigrationplans.raml
+/sbr/sbrdatabases:                    !include resources/sbr/sbrdatabases.raml
+
+
+# AppWorks consolidation script needs one YAML file per area defining the
+# resources within that area. This YAML file is for scef area and defines
+# all the resources within that area. Each line in this file represents a
+# resource and is of format
+#
+#   scef/<resource>: !include <resourceRamlFile>
+#
+# the prefix in each line shall match the area and the resource name used in
+# the URI.
+
+/scef/accesscontrolassociations:              !include resources/scef/accesscontrolassociations.raml
+/scef/accesscontrollists:                     !include resources/scef/accesscontrollists.raml
+/scef/accesscontrolrules:                     !include resources/scef/accesscontrolrules.raml
+/scef/apnconfigurationsets:                   !include resources/scef/apnconfigurationsets.raml
+/scef/devicetriggeringconfigurationsets:      !include resources/scef/devicetriggeringconfigurationsets.raml
+/scef/monitoringeventconfigurationsets:       !include resources/scef/monitoringeventconfigurationsets.raml
+/scef/niddconfigurationsets:                  !include resources/scef/niddconfigurationsets.raml
+/scef/options:                                !include resources/scef/options.raml
+/scef/scsapplicationservers:                  !include resources/scef/scsapplicationservers.raml
+
+
+####################
+# Copyright (C) 2010, 2018, Oracle and/or its affiliates. All rights reserved.
+####################
+#
+# AppWorks consolidation script needs one YAML file per area defining the
+# resources within that area. This YAML file is for sdbs area and defines
+# all the resources within that area. Each line in this file represents a
+# resource and is of format
+#
+#   sdbs/<resource>: !include <resourceRamlFile>
+#
+# the prefix in each line shall match the area and the resource name used in
+# the URI.
+#
+/sdbs/blacklists:                        !include resources/sdbs/blacklists.raml
+/sdbs/connections:                       !include resources/sdbs/connections.raml
+/sdbs/destinationmaps:                   !include resources/sdbs/destinationmaps.raml
+/sdbs/destinations:                      !include resources/sdbs/destinations.raml
+/sdbs/domainidentifiers:                 !include resources/sdbs/domainidentifiers.raml
+/sdbs/drmps:                             !include resources/sdbs/drmps.raml
+/sdbs/naihosts:                          !include resources/sdbs/naihosts.raml
+/sdbs/routingentities:                   !include resources/sdbs/routingentities.raml
+/sdbs/subscribers:                       !include resources/sdbs/subscribers.raml
+/sdbs/options:                           !include resources/sdbs/options.raml
+
+/topo/dscpinterfacerules: !include resources/topo/dscpinterfacerules.raml
+/topo/dscpportrules:      !include resources/topo/dscpportrules.raml
+
+/topo/networkdevices:     !include resources/topo/networkdevices.raml
+/topo/networkelements:    !include resources/topo/networkelements.raml
+/topo/networkroutes:      !include resources/topo/networkroutes.raml
+/topo/networks:           !include resources/topo/networks.raml
+/topo/servicepaths:       !include resources/topo/servicepaths.raml
+
+/topo/places:             !include resources/topo/places.raml
+/topo/placeassociations:  !include resources/topo/placeassociations.raml
+
+/topo/resourcedomains:    !include resources/topo/resourcedomains.raml
+
+/topo/servers:            !include resources/topo/servers.raml
+/topo/servergroups:       !include resources/topo/servergroups.raml
+
+/topo/versions:           !include resources/topo/versions.raml
+
+# AppWorks consolidation script needs one YAML file per area defining the
+# resources within that area. This YAML file is for vstp area and defines
+# all the resources within that area. Each line in this file represents a
+# resource and is of format
+#
+#   vstp/<resource>: !include <resourceRamlFile>
+#
+# the prefix in each line shall match the area and the resource name used in
+# the URI.
+
+/vstp/capacity:                                      !include resources/vstp/capacity.raml
+/vstp/connectionconfigurationsets:                   !include resources/vstp/connectionconfigurationsets.raml
+/vstp/connections:                                   !include resources/vstp/connections.raml
+/vstp/defaultconversions:                            !include resources/vstp/defaultconversions.raml
+/vstp/featureadminstates:                            !include resources/vstp/featureadminstates.raml
+/vstp/globaltitleaddresses:                          !include resources/vstp/gttaddresses.raml
+/vstp/gttactions:                                    !include resources/vstp/gttactions.raml
+/vstp/gttmods:                                       !include resources/vstp/gttmods.raml
+/vstp/gttselectors:                                  !include resources/vstp/gttselectors.raml
+/vstp/gttsets:                                       !include resources/vstp/gttsets.raml
+/vstp/gttactionsets:                                 !include resources/vstp/gttactionsets.raml
+/vstp/links:                                         !include resources/vstp/links.raml
+/vstp/linksets:                                      !include resources/vstp/linksets.raml
+/vstp/localhosts:                                    !include resources/vstp/localhosts.raml
+/vstp/localsignalingpoints:                          !include resources/vstp/localsignalingpoints.raml
+/vstp/m2paoptions:                                   !include resources/vstp/m2paoptions.raml
+/vstp/m3rloptions:                                   !include resources/vstp/m3rloptions.raml
+/vstp/mapsets:                                       !include resources/vstp/mapsets.raml
+/vstp/mpleader:                                      !include resources/vstp/mpleader.raml
+/vstp/mrnsets:                                       !include resources/vstp/mrnsets.raml
+/vstp/mtpscreensets:                                 !include resources/vstp/mtpscreensets.raml
+/vstp/mtpscreeningrules:                             !include resources/vstp/mtpscreeningrules.raml
+/vstp/remotehosts:                                   !include resources/vstp/remotehosts.raml
+/vstp/remotesignalingpoints:                         !include resources/vstp/remotesignalingpoints.raml
+/vstp/routes:                                        !include resources/vstp/routes.raml
+/vstp/sccpapplications:                              !include resources/vstp/sccpapplications.raml
+/vstp/sccpoptions:                                   !include resources/vstp/sccpoptions.raml
+/vstp/mppeers:                                       !include resources/vstp/mppeersstatus.raml
+/vstp/alarmaggregationoptions:                       !include resources/vstp/vstpalarmaggregationoptions.raml
+
